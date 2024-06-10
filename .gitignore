@@ -14,7 +14,7 @@ lerna-debug.log*
 request.http
 # OS
 .DS_Store
-
+/request.http
 # Tests
 /coverage
 /.nyc_output
