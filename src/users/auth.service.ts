@@ -15,16 +15,32 @@ export class AuthService {
   constructor(private userService: UsersService) {}
 
   async signup(email: string, password: string) {
-    const users = await this.userService.find(email);
+    // See if email in use
+
+    const users: any = await this.userService.find(email);
+    console.log(users);
+
     if (users.length > 0) {
-      throw new BadRequestException('Email is already registered');
+      throw new BadRequestException('email in already registered ');
     }
 
-    const salt = randomBytes(10).toString('hex');
-    const hash = (await scrypt(password, salt, 32)) as Buffer;
-    const result = `${salt}.${hash.toString('hex')}`;
+    // const saltOrRounds = 10
+    // const hash = await bcrypt.hash(password, saltOrRounds);
+    // hash the user password
 
+    // Generate a salt
+    const salt = randomBytes(10).toString('hex');
+
+    // Hash the salt and passwprd together
+    const hash = (await scrypt(password, salt, 32)) as Buffer;
+    // Join the hased result and the salt together
+    const result = salt + '.' + hash.toString('hex');
+
+    // create a user and save it
     const user = await this.userService.create(email, result);
+
+    // retuen the user
+
     return user;
   }
 
@@ -32,7 +48,6 @@ export class AuthService {
 
   async signin(email: string, password: string) {
     const [user] = await this.userService.find(email);
-    console.log(user);
     if (!user) {
       throw new NotFoundException('Email not found');
     }
