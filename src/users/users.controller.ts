@@ -7,6 +7,7 @@ import {
   Param,
   Query,
   Delete,
+  Session,
   // UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -29,6 +30,16 @@ export class UsersController {
     console.log(body);
     // return this.userService.create(body.email, body.password);
     return await this.authService.signup(body.email, body.password);
+  }
+
+  @Get('color/:color')
+  async setColor(@Param('color') color: string, @Session() session: any) {
+    return (session.color = color);
+  }
+
+  @Get('color')
+  getColor(@Session() session: any) {
+    return session.color;
   }
 
   @Post('/signin')
