@@ -1,5 +1,5 @@
 import {
-  // UseInterceptors,
+  UseInterceptors,
   NestInterceptor,
   ExecutionContext,
   CallHandler,
@@ -9,8 +9,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { plainToClass } from 'class-transformer';
 import { UserDto } from 'src/users/dtos/user-det';
-
+export function Serialize(dto: any) {
+  return UseInterceptors(new SerializerInterceptor(dto));
+}
 export class SerializerInterceptor implements NestInterceptor {
+  constructor(private dto: any) {}
   intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
     // run Something befor a request is hadnles
     // by the request handler
