@@ -61,6 +61,10 @@ export class UsersController {
   }
   // @UseInterceptors(SerializerInterceptor)
 
+  @Post('/signout')
+  async signOut(@Session() session: any) {
+    session.userId = null;
+  }
   @Get('/:id')
   findUser(@Param('id') id: string) {
     return this.userService.findOne(parseInt(id));
